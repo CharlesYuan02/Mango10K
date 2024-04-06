@@ -1,2 +1,10 @@
 .env
+
+env/
+data/
+
+.DS_Store
+Dataset/
+*.html
+
 .gradio_cached_examples/*

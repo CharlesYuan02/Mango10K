@@ -11,5 +11,6 @@ langchain_openai
 langchain_core
 python-dotenv
 langsmith
-
+langchain-nomic
+unstructured
 python-dotenv
