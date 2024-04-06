@@ -4,7 +4,6 @@ import json
 import os 
 
 
-
 def edgar_scraper(ticker_name):
     # mapper object to convert the ticker to cik
     cik_mapper = StockMapper()
@@ -28,7 +27,26 @@ def edgar_scraper(ticker_name):
     with open(f'{output_dir}/{ticker_name}.json', 'w') as f:
         f.write(pretty_response)
 
-    print("If you're seeing this, I executed.")
+    print(f"If you're seeing this, I executed. And the type of edgar_json_response is {type(edgar_json_response)}")
+
+    for filing in edgar_json_response['filings']:
+        print(type(filing))
+        print(filing)
+        accession_number = filing['accessionNumber']
+        print(accession_number)
+        document_name = filing['primaryDocument']
+
+        url = f"https://www.sec.gov/Archives/edgar/data/{cik_Value_Of_Ticker}/{accession_number}/{document_name}"
+
+        # Download the filing document
+        response = requests.get(url)
+        if response.status_code == 200:
+            file_path = os.path.join(output_dir, document_name)
+            with open(file_path, 'wb') as file:
+                file.write(response.content)
+            print(f"Downloaded: {document_name}")
+        else:
+            print(f"Failed to download: {document_name}")
 
 
 if __name__ == "__main__":
