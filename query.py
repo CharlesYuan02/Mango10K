@@ -1,45 +1,39 @@
 import os
 import pymongo
-import requests
-import json
-from langchain.llms import OpenAI
+from dotenv import load_dotenv
+from langchain_community.llms import OpenAI
 from langchain.chains import RetrievalQA
-
+from langchain_nomic import NomicEmbeddings
 from langchain.vectorstores import MongoDBAtlasVectorSearch
-from mixpeek.client import Mixpeek
-from pydantic import BaseModel
 
-
-def chatBot(ticker, query):
-    CLUSTER_NAME = os.environ["CLUSTER_NAME"]
-    DB_NAME = os.environ["DB_NAME"]
-    COLLECTION_NAME = os.environ[ticker]
+def chatbot(ticker, query):
+    CLUSTER_NAME = os.getenv("CLUSTER_NAME")
+    DB_NAME = os.getenv("DB_NAME")
+    COLLECTION_NAME = os.getenv("COLLECTION_NAME")
     client = pymongo.MongoClient(CLUSTER_NAME)
     database = client[DB_NAME]
     collection = database[COLLECTION_NAME]
     ATLAS_VECTOR_SEARCH_INDEX_NAME = "vector_index"
 
-    MIXPEEK_KEY = os.environ["MIXPEEK_KEY"]
-    mixpeek = Mixpeek(api_key=MIXPEEK_KEY)
+    embeddings = NomicEmbeddings(
+        nomic_api_key=os.getenv("NOMIC_API_KEY"),
+        model='nomic-embed-text-v1.5',
+    )
 
-    embedding = mixpeek.embed(
-        input=query, 
-        model="nomic-ai/nomic-embed-text-v1"
-    ).embedding
-
+    # Define the filter based on the metadata field and value
     vector_search = MongoDBAtlasVectorSearch(
-        documents=query,
-        embedding=embedding,
-        collection=COLLECTION_NAME,
+        embedding=embeddings,
+        collection=collection,
         index_name=ATLAS_VECTOR_SEARCH_INDEX_NAME,
     )
 
+    filter_dict = {"metadata.ticker": ticker}
     llm = OpenAI(
-            openai_api_key=os.getenv("OPENAI_API_KEY"),
-            temperature=0
+        openai_api_key=os.getenv("OPENAI_API_KEY"),
+        temperature=0
     )
     
-    retriever = vector_search.as_retriever()
+    retriever = vector_search.as_retriever(filter=filter_dict)
     
     qa = RetrievalQA.from_chain_type(
         llm=llm,
@@ -48,8 +42,8 @@ def chatBot(ticker, query):
     )
     
     retriever_output = qa.run(query)
-
     return retriever_output
     
 if __name__ == "__main__":
-    print(chatBot("TSLA", "What is the projected growth for 2024?"))
+    load_dotenv()
+    print(chatbot("TSLA", "Is the market for energy storage products competitive?"))
