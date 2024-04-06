@@ -1,1 +1,6 @@
 .env
+env/
+
+.DS_Store
+
+*.html
