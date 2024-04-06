@@ -13,3 +13,4 @@ python-dotenv
 langsmith
 langchain-nomic
 unstructured
+python-dotenv
