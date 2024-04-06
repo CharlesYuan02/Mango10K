@@ -3,8 +3,10 @@ from langchain.schema import AIMessage, HumanMessage
 import openai
 import os
 import gradio as gr
+from dotenv import load_dotenv
 
-os.environ["OPENAI_API_KEY"] =""  # Replace with your key
+load_dotenv()
+os.environ["OPENAI_API_KEY"] = os.getenv("OPEN_AI_KEY")
 
 llm = ChatOpenAI(temperature=1.0, model='gpt-3.5-turbo-0613')
 
