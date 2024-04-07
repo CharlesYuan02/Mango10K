@@ -5,8 +5,6 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from langchain_nomic import NomicEmbeddings
 import requests
-
-
 import os
 from dotenv import load_dotenv
 
@@ -26,16 +24,25 @@ ATLAS_VECTOR_SEARCH_INDEX_NAME = "vector_index"
 MONGODB_COLLECTION = client[DB_NAME][COLLECTION_NAME]
 
 def seeder(url, cname):
+    """
+    Seed the MongoDB collection with documents extracted from the given URL.
+
+    Args:
+        url (str): The URL from which to extract documents.
+        cname (str): The name of the company associated with the documents.
+
+    Returns:
+        None
+    """
     # r = requests.get(url)
     # with open("docs.html", "w") as f:
     #     f.write(r.text)
 
-    loader = UnstructuredHTMLLoader("Dataset/tsla-20231231.html")
-    # cname = loader.metadata["cname"]
+    loader = UnstructuredHTMLLoader(url)
     data = loader.load()
 
     # Split the text into smaller chunks
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=500)
     texts = text_splitter.split_documents(data)
 
     embeddings = NomicEmbeddings(
@@ -55,5 +62,5 @@ def seeder(url, cname):
     )
     
 if __name__ == "__main__":
-    seeder("https://www.sec.gov/Archives/edgar/data/1318605/000162828024002390/tsla-20231231.htm", "TSLA")
+    seeder("Dataset/tsla-20231231.html", "APPL")
     print("Seeding complete.")
