@@ -29,5 +29,3 @@ def edgar_scraper(ticker_name):
     print("If you're seeing this, I executed.")
 
 edgar_scraper("AAPL")
-
-
