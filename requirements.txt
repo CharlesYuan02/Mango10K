@@ -7,3 +7,4 @@ pydantic==2.6.4
 pymongo==4.6.3
 python-dotenv==1.0.1
 sec_cik_mapper==2.1.0
+unstructured==0.13.2

@@ -5,5 +5,4 @@ data/
 .DS_Store
 Dataset/
 sample_json_outputs/
-*.html
 .gradio_cached_examples/*
