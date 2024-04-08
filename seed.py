@@ -1,8 +1,8 @@
 import os
 from dotenv import load_dotenv
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import MongoDBAtlasVectorSearch
-from langchain.document_loaders import UnstructuredHTMLLoader
+from langchain_community.vectorstores import MongoDBAtlasVectorSearch
+from langchain_community.document_loaders import UnstructuredHTMLLoader
 from langchain_nomic import NomicEmbeddings
 from pymongo import MongoClient
 
@@ -60,5 +60,8 @@ def seeder(url, cname):
     )
     
 if __name__ == "__main__":
-    seeder("Dataset/tsla-20231231.html", "AAPL")
+    seeder("example_filings/tsla-20231231.html", "TSLA")
+    seeder("example_filings/10-Q", "TSLA")
+    seeder("example_filings/aapl-20230930.html", "AAPL")
+    seeder("example_filings/tsla-20231231.html", "AAPL")
     print("Seeding complete.")
