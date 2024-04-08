@@ -9,7 +9,8 @@ def main(message, history, ticker):
 
 gr.ChatInterface(
     main,
-    additional_inputs=[gr.Textbox(placeholder="Type your ticker here...", label="Ticker")],
+    additional_inputs=[gr.Textbox(placeholder="AAPL", label="Ticker")],
     retry_btn=None,
     undo_btn=None,
+    theme="soft"
 ).launch()
