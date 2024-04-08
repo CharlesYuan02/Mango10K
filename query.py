@@ -7,6 +7,18 @@ from langchain_nomic import NomicEmbeddings
 from langchain.vectorstores import MongoDBAtlasVectorSearch
 
 def chatbot(ticker, query):
+    '''
+    Performs vector search on MongoDB Atlas vector store to retrieve relevant embeddings
+    while filtering results based on ticker specified.
+    Uses OpenAI's gpt-3.5-turbo to generate a response given the retrieved embeddings.
+
+    Args:
+        ticker (str): The stock ticker (e.g. AAPL) specified for filtering.
+        query (str): The question inputted by the user.
+
+    Returns:
+        retriever_output (str): The chatbot's answer.
+    '''
     CLUSTER_NAME = os.getenv("CLUSTER_NAME")
     DB_NAME = os.getenv("DB_NAME")
     COLLECTION_NAME = os.getenv("COLLECTION_NAME")
